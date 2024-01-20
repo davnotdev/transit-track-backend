@@ -42,14 +42,15 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/signup", (req, res) => {
+  {email, name, password, vehicleType, transitCompany, busNumber, busDestination}
   userDb.createUsers(
-    "yalambersubba13@gmail.com",
-    "Yalamber Subba",
-    "wristking",
-    "bus",
-    "AC transit",
-    "51A",
-    "Fruitvale Bart",
+    email,
+    name, 
+    password,
+    vehicleType,
+    transitCompany,
+    busNumber,
+    busDestination
   );
 });
 
