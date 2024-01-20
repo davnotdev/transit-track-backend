@@ -1,18 +1,18 @@
-const { Pool } = require('pg');
-const { PrismaClient } = require('@prisma/client');
-require('dotenv').config();
+import { PrismaClient } from "@prisma/client";
+require("dotenv").config();
 
 const prisma = new PrismaClient();
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    require: true,
-  },
-});
-
-class database {
-  async createUsers(email, name, password, vehicleType, transitCompany, busNumber, busDestination) {
+export class Database {
+  async createUsers(
+    email: string,
+    name: string,
+    password: string,
+    vehicleType: string,
+    transitCompany: string,
+    busNumber: string,
+    busDestination: string,
+  ) {
     await prisma.admin.create({
       data: {
         email: email,
@@ -21,23 +21,22 @@ class database {
         vehicleType: vehicleType || "",
         transitCompany: transitCompany || "",
         busNumber: busNumber || "",
-        busDestination: busDestination || ""
-      }
+        busDestination: busDestination || "",
+      },
     });
   }
 
-  async checkUser(email, password){
+  async checkUser(email: string, password: string) {
     const user = await prisma.admin.findUnique({
       where: {
         email: email,
-        password: password
+        password: password,
       },
-    } 
-    )
-    if (user){
-      console.log("True")
+    });
+    if (user) {
+      console.log("True");
     } else {
-      console.log("False")
+      console.log("False");
     }
   }
 
@@ -46,35 +45,33 @@ class database {
     return users;
   }
 
-  async readUser(busDestination) {
+  async readUser(busDestination: string) {
     const user = await prisma.admin.findFirst({
       where: {
-        busDestination: busDestination
-      }
+        busDestination: busDestination,
+      },
     });
 
     return user;
   }
 
-  async updateUser(email, vehicleType, transitCompany) {
+  async updateUser(email: string, vehicleType: string, transitCompany: string) {
     await prisma.admin.update({
       where: {
-        email: email
+        email: email,
       },
       data: {
         vehicleType: vehicleType,
         transitCompany: transitCompany,
-      }
+      },
     });
   }
 
-  async deleteUser(email) {
+  async deleteUser(email: string) {
     await prisma.admin.delete({
       where: {
-        email: email
-      }
+        email: email,
+      },
     });
   }
 }
-
-module.exports = database;
