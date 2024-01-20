@@ -28,11 +28,11 @@ app.get("/", (req, res) => {
   getPostgresVersion();
 });
 
-app.get("/login", (req, res) =>{
+app.post("/api/login", (req, res) =>{
   userDb.checkUser("yalambersubba13@gmail.com", "wristking")
 })
 
-app.get("/signup", (req, res) =>{
+app.get("/api/signup", (req, res) =>{
   userDb.createUsers("yalambersubba13@gmail.com", "Yalamber Subba", "wristking", "bus", "AC transit", "51A", "Fruitvale Bart");
 })
 
