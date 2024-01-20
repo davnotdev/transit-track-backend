@@ -26,12 +26,27 @@ class database {
     });
   }
 
+  async checkUser(email, password){
+    const user = await prisma.admin.findUnique({
+      where: {
+        email: email,
+        password: password
+      },
+    } 
+    )
+    if (user){
+      console.log("True")
+    } else {
+      console.log("False")
+    }
+  }
+
   async readAllUsers() {
     const users = await prisma.admin.findMany();
     return users;
   }
 
-  async readUsers(busDestination) {
+  async readUser(busDestination) {
     const user = await prisma.admin.findFirst({
       where: {
         busDestination: busDestination

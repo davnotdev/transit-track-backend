@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/login", (req, res) =>{
-
+  userDb.checkUser("yalambersubba13@gmail.com", "wristking")
 })
 
 app.get("/signup", (req, res) =>{
@@ -37,7 +37,6 @@ app.get("/signup", (req, res) =>{
 })
 
 // app.get("/")
-
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
