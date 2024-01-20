@@ -42,15 +42,16 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/signup", (req, res) => {
-  {email, name, password, vehicleType, transitCompany, busNumber, busDestination}
+  console.log(req.body)
+  const {email, name, password, vehicleType, transitCompany} = req.body
   userDb.createUsers(
     email,
     name, 
     password,
     vehicleType,
     transitCompany,
-    busNumber,
-    busDestination
+    "",
+    "" 
   );
 });
 
