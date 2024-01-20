@@ -1,8 +1,34 @@
 const express = require("express")
 const { Pool } = require('pg');
+const {PrismaClient} = require('@prisma/client')
 require('dotenv').config();
 
+
 const app = express();
+const prisma = new PrismaClient()
+
+const QueryUsers = async () =>{
+  await prisma.admin.create({
+    data:{
+      email: "e",
+      name: "", 
+      vehicleType:"", 
+      transitCompany: "", 
+      busNumber: "", 
+      busDestination: ""
+    } 
+  })
+  const AllUsers = await prisma.admin.findMany()
+  console.log(AllUsers)
+}
+
+// QueryUsers().then(async () => {
+//   await prisma.$disconnect()
+// }).catch(async(e) => {
+//   console.error(e)
+//   await prisma.$disconnect()
+//   process.exit(1)
+// })
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
