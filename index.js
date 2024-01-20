@@ -10,7 +10,7 @@ const prisma = new PrismaClient()
 const QueryUsers = async () =>{
   await prisma.admin.create({
     data:{
-      email: "e",
+      email: "d",
       name: "", 
       vehicleType:"", 
       transitCompany: "", 
@@ -20,15 +20,17 @@ const QueryUsers = async () =>{
   })
   const AllUsers = await prisma.admin.findMany()
   console.log(AllUsers)
+
+  await prisma.admin.deleteMany()
 }
 
-// QueryUsers().then(async () => {
-//   await prisma.$disconnect()
-// }).catch(async(e) => {
-//   console.error(e)
-//   await prisma.$disconnect()
-//   process.exit(1)
-// })
+QueryUsers().then(async () => {
+  await prisma.$disconnect()
+}).catch(async(e) => {
+  console.error(e)
+  await prisma.$disconnect()
+  process.exit(1)
+})
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
