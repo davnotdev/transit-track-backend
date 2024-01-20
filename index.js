@@ -12,6 +12,7 @@ const QueryUsers = async () =>{
     data:{
       email: "d",
       name: "", 
+      password: "",
       vehicleType:"", 
       transitCompany: "", 
       busNumber: "", 
@@ -24,13 +25,14 @@ const QueryUsers = async () =>{
   await prisma.admin.deleteMany()
 }
 
-QueryUsers().then(async () => {
-  await prisma.$disconnect()
-}).catch(async(e) => {
-  console.error(e)
-  await prisma.$disconnect()
-  process.exit(1)
-})
+
+// QueryUsers().then(async () => {
+//   await prisma.$disconnect()
+// }).catch(async(e) => {
+//   console.error(e)
+//   await prisma.$disconnect()
+//   process.exit(1)
+// })
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -51,9 +53,18 @@ const getPostgresVersion = async () => {
 
 const port = 8080;
 
-app.get("/", (_req, res) => {
+app.get("/", (req, res) => {
   getPostgresVersion();
 });
+
+app.get("/login", (req, res) =>{
+
+})
+
+app.post("/signup", (req, res) =>{
+
+
+})
 
 // app.get("/")
 
