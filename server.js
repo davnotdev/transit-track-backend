@@ -1,8 +1,5 @@
-const express = require("express")
 const { Pool } = require('pg');
 require('dotenv').config();
-
-const app = express();
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -11,7 +8,7 @@ const pool = new Pool({
   },
 });
 
-const getPostgresVersion = async () => {
+async function getPostgresVersion() {
   const client = await pool.connect();
   try {
     const response = await client.query('SELECT version()');
@@ -21,14 +18,4 @@ const getPostgresVersion = async () => {
   }
 }
 
-const port = 8080;
-
-app.get("/", (_req, res) => {
-  getPostgresVersion();
-});
-
-// app.get("/")
-
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+getPostgresVersion();
