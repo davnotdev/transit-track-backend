@@ -1,9 +1,20 @@
-import express from "express";
-import { Database } from "./api/database";
-import { Pool } from "pg";
+// import express from "express";
+const express = require('express')
+// import { Database } from "./api/database";
+const {Database} = require('./api/database')
+// import { Pool } from "pg";
+const {Pool} = require('pg')
 
 const app = express();
 const userDb = new Database();
+
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+  res.setHeader('Access-Control-Allow-Origin', 'https://ecommerce-ewipdamn7-gutsyguy.vercel.app');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -22,15 +33,15 @@ const getPostgresVersion = async () => {
 
 const port = process.env.PORT || 8080;
 
-app.get("/", (req:Request, res:any) => {
+app.get("/", (req, res) => {
   getPostgresVersion();
 });
 
-app.get("/login", (req:any, res:any) => {
+app.get("/login", (req, res) => {
   userDb.checkUser("yalambersubba13@gmail.com", "wristking");
 });
 
-app.get("/signup", (req:any, res:any) => {
+app.get("/signup", (req, res) => {
   userDb.createUsers(
     "yalambersubba13@gmail.com",
     "Yalamber Subba",
