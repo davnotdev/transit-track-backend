@@ -19,7 +19,6 @@ class Database {
                 data: {
                     email: email,
                     name: name,
-                    // @ts-ignore
                     password: password,
                     vehicleType: vehicleType || "",
                     transitCompany: transitCompany || "",
@@ -29,21 +28,16 @@ class Database {
             });
         });
     }
-    checkUser(email, password) {
+    checkUser(email) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield prisma.admin.findUnique({
+            const user = yield prisma.admin.findFirst({
                 where: {
                     email: email,
-                    // @ts-ignore
-                    password: password,
+                    // password: password,
                 },
             });
-            if (user) {
-                console.log("True");
-            }
-            else {
-                console.log("False");
-            }
+            console.log(user);
+            return user;
         });
     }
     readAllUsers() {

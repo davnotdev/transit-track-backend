@@ -54,10 +54,8 @@ app.get("/", (req, res) => {
   
 app.post("/api/login", async (req, res) => {
     const { email } = req.body;
-  
     try {
       const userExists = await userDb.checkUser(email);
-  
       if (userExists) {
         // Here you would normally proceed to check the password, etc.
         res.status(200).send("User exists.");
@@ -73,9 +71,7 @@ app.post("/api/login", async (req, res) => {
   
 
 app.post("/api/signup", (req, res) => {
-    console.log(req.body);
     const { email, name, password, vehicleType, transitCompany } = req.body;
-    
     // Make sure to handle the async operation properly
     userDb.createUsers(
       email,

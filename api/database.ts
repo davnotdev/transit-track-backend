@@ -28,14 +28,13 @@ class Database {
     });
   }
 
-  async checkUser(email: string) {
-    const user = await prisma.admin.findUnique({
+  async checkUser(email: string): Promise<boolean> {
+    const user = await prisma.admin.findFirst({
       where: {
         email: email,
         // password: password,
       },
     });
-    console.log(user)
     return user
   }
 
