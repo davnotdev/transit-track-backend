@@ -32,7 +32,6 @@ export class Database {
     const user = await prisma.admin.findFirst({
       where: {
         email: email,
-        // password: password,
       },
     });
     return user
