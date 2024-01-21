@@ -50,13 +50,13 @@ app.get("/", (req, res) => {
     res.send("Hello World");
 });
 app.post("/api/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, password } = req.body;
+    const { email, password, transit } = req.body;
     try {
         const userExists = yield userDb.checkUser(email);
         if (userExists) {
             console.log("user exists");
             if (userExists.password == password) {
-                let token = (0, adminToken_1.adminTokenLogin)(adminTokenMan, email);
+                let token = (0, adminToken_1.adminTokenLogin)(adminTokenMan, email, transit);
                 (0, tracker_1.trackerInitialUpdateAdmin)(tracker, token);
                 res.status(200).send({
                     token,
@@ -106,6 +106,19 @@ app.post("/api/calculate_density", (req, res) => {
 });
 app.get("/api/get_transit_data", (_, res) => {
     res.send(transit);
+});
+app.get("/api/get_transits", (_, res) => {
+    let adminDatas = [];
+    for (let adminKey in adminTokenMan.tokens.keys()) {
+        let adminData = adminTokenMan.tokens.get(adminKey);
+        adminDatas.push({
+            location: tracker.admin_locations.get(adminData.token),
+            transit: adminData.transit,
+        });
+    }
+    res.send({
+        transits: adminDatas,
+    });
 });
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

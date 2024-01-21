@@ -51,13 +51,13 @@ app.get("/", (req: Request, res: any) => {
 });
 
 app.post("/api/login", async (req: any, res: any) => {
-  const { email, password } = req.body;
+  const { email, password, transit } = req.body;
   try {
     const userExists = await userDb.checkUser(email);
     if (userExists) {
       console.log("user exists");
       if (userExists.password == password) {
-        let token = adminTokenLogin(adminTokenMan, email);
+        let token = adminTokenLogin(adminTokenMan, email, transit);
         trackerInitialUpdateAdmin(tracker, token);
         res.status(200).send({
           token,
@@ -108,6 +108,20 @@ app.post("/api/calculate_density", (req: any, res: any) => {
 
 app.get("/api/get_transit_data", (_: any, res: any) => {
   res.send(transit);
+});
+
+app.get("/api/get_transits", (_: any, res: any) => {
+  let adminDatas = [];
+  for (let adminKey in adminTokenMan.tokens.keys()) {
+    let adminData = adminTokenMan.tokens.get(adminKey)!;
+    adminDatas.push({
+      location: tracker.admin_locations.get(adminData.token)!,
+      transit: adminData.transit,
+    });
+  }
+  res.send({
+    transits: adminDatas,
+  });
 });
 
 app.listen(port, () => {

@@ -6,7 +6,7 @@ export interface TransitData {
   units: TransitUnit[];
 }
 
-interface TransitUnit {
+export interface TransitUnit {
   id: string;
   short_name: string;
   long_name: string;

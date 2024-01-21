@@ -8,9 +8,12 @@ function createAdminTokenMan() {
     };
 }
 exports.createAdminTokenMan = createAdminTokenMan;
-function adminTokenLogin(tokenMan, email) {
+function adminTokenLogin(tokenMan, email, transit) {
     let token = (0, uuid_1.v4)();
-    tokenMan.tokens.set(email, token);
+    tokenMan.tokens.set(email, {
+        token,
+        transit,
+    });
     return token;
 }
 exports.adminTokenLogin = adminTokenLogin;
