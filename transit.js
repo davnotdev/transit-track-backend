@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.fetchTransitData = void 0;
 const adm_zip_1 = __importDefault(require("adm-zip"));
 const sync_1 = require("csv-parse/sync");
 const GITHUB_GTFS_SOURCES = "https://api.github.com/repos/MobilityData/mobility-database-catalogs/contents/catalogs/sources/gtfs/schedule";
@@ -116,3 +117,4 @@ function fetchTransitData() {
         };
     });
 }
+exports.fetchTransitData = fetchTransitData;

@@ -1,7 +1,7 @@
 import AdmZip from "adm-zip";
 import { parse } from "csv-parse/sync";
 
-interface TransitData {
+export interface TransitData {
   stops: TransitStop[];
   units: TransitUnit[];
 }
