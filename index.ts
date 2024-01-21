@@ -110,6 +110,23 @@ app.get("/api/get_transit_data", (_: any, res: any) => {
   res.send(transit);
 });
 
+app.post("/api/get_profile", (req: any, res: any) => {
+  const { token } = req.body;
+  let email = null;
+  for (let key of adminTokenMan.tokens.keys()) {
+    let val = adminTokenMan.tokens.get(key)!;
+    if (val.token == token) {
+      email = key;
+      break;
+    }
+  }
+  if (!email) {
+    res.status(500).send({ no: "admins avaliable" });
+    return;
+  }
+  res.send(userDb.getProfile(email));
+});
+
 app.get("/api/get_transits", (_: any, res: any) => {
   let adminDatas = [];
   for (let adminKey of adminTokenMan.tokens.keys()) {

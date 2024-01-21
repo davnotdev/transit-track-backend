@@ -1,5 +1,5 @@
 // import { PrismaClient } from "@prisma/client";
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require("@prisma/client");
 
 require("dotenv").config();
 
@@ -34,7 +34,7 @@ export class Database {
         email: email,
       },
     });
-    return user
+    return user;
   }
 
   async readAllUsers() {
@@ -42,14 +42,19 @@ export class Database {
     return users;
   }
 
-  async readUser(busDestination: string) {
-    const user = await prisma.admin.findFirst({
+  async getProfile(email: string): Promise<any> {
+    const profile = await prisma.admin.findFirst({
       where: {
-        busDestination: busDestination,
+        email: email,
+      },
+      select: {
+        email: true,
+        name: true,
+        transitCompany: true,
       },
     });
 
-    return user;
+    return profile;
   }
 
   async updateUser(email: string, vehicleType: string, transitCompany: string) {
@@ -72,5 +77,3 @@ export class Database {
     });
   }
 }
-
-
