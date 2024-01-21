@@ -141,6 +141,58 @@ app.get("/api/get_transits", (_: any, res: any) => {
   });
 });
 
+app.post("/api/get_admin_location_with_transit", (req: any, res: any) => {
+  let { transit } = req.body;
+  let adminToken = null;
+
+  for (let adminKey of adminTokenMan.tokens.keys()) {
+    let adminData = adminTokenMan.tokens.get(adminKey)!;
+    if (deepEqual(adminData.transit, transit)) {
+      adminToken = adminData.token;
+      break;
+    }
+  }
+
+  if (adminToken) {
+    let location = tracker.admin_locations.get(adminToken)!;
+    res.send({ ok: true, location });
+  } else {
+    res.send({ ok: false });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+
+function deepEqual(obj1: any, obj2: any): boolean {
+  // Check if both arguments are objects
+  if (
+    typeof obj1 === "object" &&
+    obj1 !== null &&
+    typeof obj2 === "object" &&
+    obj2 !== null
+  ) {
+    // Get the keys of both objects
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+
+    // Check if the number of keys is the same
+    if (keys1.length !== keys2.length) {
+      return false;
+    }
+
+    // Check if each key and its corresponding value are deep equal
+    for (let key of keys1) {
+      if (!keys2.includes(key) || !deepEqual(obj1[key], obj2[key])) {
+        return false;
+      }
+    }
+
+    // If all keys and values are deep equal, return true
+    return true;
+  } else {
+    // If not both objects, compare values directly
+    return obj1 === obj2;
+  }
+}
