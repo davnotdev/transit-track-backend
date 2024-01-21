@@ -13,18 +13,21 @@ export function createTracker(): Tracker {
 }
 
 export function trackerUpdateUser(tracker: Tracker, hash: string, location: LatLong) {
+  tracker.user_locations.set(hash, location);
+}
+
+export function trackerInitialUpdateAdmin(tracker: Tracker, hash: string) {
+  tracker.admin_locations.set(hash, [0, 0]);
+}
+
+export function trackerUpdateAdmin(tracker: Tracker, hash: string, location: LatLong) {
   if (tracker.admin_locations.get(hash)) {
     throw "Admin not authenticated";
   }
 
-  tracker.user_locations.set(hash, location);
-}
-
-export function trackerUpdateAdmin(tracker: Tracker, hash: string, location: LatLong) {
   tracker.admin_locations.set(hash, location);
 }
 
-const FT_TO_LAT_CONV: number = 0.00000273965;
 const AVG_BUS_DENSITY_AREA: number = 0.000054793;
 
 export function trackerCalculateDensity(tracker: Tracker, admin: string) {
