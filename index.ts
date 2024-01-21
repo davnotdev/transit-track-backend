@@ -44,27 +44,6 @@ app.get("/", (req:Request, res:any) => {
   res.send("Hello World");
 });
 
-// app.post("/api/login", async (req, res) => {
-//     const { email, password } = req.body;
-
-//     try {
-//       const user = await userDb.checkUser(email, password);
-
-//       if (user) {
-//         // Assuming checkUser returns a user object on successful login
-//         // Send back a success status code and possibly a token or user details
-//         res.status(200).send("Login successful");
-//       } else {
-//         // If credentials are wrong, typically a 401 Unauthorized status is sent
-//         res.status(401).send("Invalid credentials");
-//       }
-//     } catch (error) {
-//       // For other errors, a 500 Internal Server Error status is used
-//       console.error(error);
-//       res.status(500).send("An error occurred during login");
-//     }
-//   });
-
 app.post("/api/login", async (req:any, res:any) => {
   const {email, password} = req.body;
   try {
@@ -110,17 +89,15 @@ app.post("/api/update_location", (req:any, res:any) => {
   res.send("ok");
 });
 
-app.post("/api/get_density", (req:any, res:any) => {
+app.post("/api/calculate_density", (req:any, res:any) => {
   const { userToken } = req.body;
   let closestAdmin = trackerGetClosestAdmin(tracker, userToken);
   if (!closestAdmin) {
-    res.status(500).send("{'no':'admins avaliable'}");
+    res.status(500).send({ no: "admins avaliable" });
     return;
   }
   let density = trackerCalculateDensity(tracker, closestAdmin);
-  res.send({
-    density,
-  });
+  res.send({ density });
 });
 
 app.listen(port, () => {
