@@ -33,7 +33,7 @@ const WHITELISTED_SOURCES = [
 const EXTRA_TRANSIT_UNITS: TransitUnit[] = [];
 const EXTRA_TRANSIT_STOPS: TransitStop[] = [];
 
-async function fetchTransitData(): Promise<TransitData> {
+export async function fetchTransitData(): Promise<TransitData> {
   let res: any[] = await (await fetch(GITHUB_GTFS_SOURCES)).json();
 
   let whitelisted_downloads = res

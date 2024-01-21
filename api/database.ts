@@ -28,7 +28,7 @@ export class Database {
     });
   }
 
-  async checkUser(email: string): Promise<boolean> {
+  async checkUser(email: string): Promise<any> {
     const user = await prisma.admin.findFirst({
       where: {
         email: email,
