@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.trackerGetClosestAdmin = exports.trackerCalculateDensity = exports.trackerUpdateAdmin = exports.trackerUpdateUser = exports.createTracker = void 0;
+exports.trackerGetClosestAdmin = exports.trackerCalculateDensity = exports.trackerUpdateAdmin = exports.trackerInitialUpdateAdmin = exports.trackerUpdateUser = exports.createTracker = void 0;
 function createTracker() {
     return {
         user_locations: new Map(),
@@ -9,17 +9,20 @@ function createTracker() {
 }
 exports.createTracker = createTracker;
 function trackerUpdateUser(tracker, hash, location) {
-    if (tracker.admin_locations.get(hash)) {
-        throw "Admin not authenticated";
-    }
     tracker.user_locations.set(hash, location);
 }
 exports.trackerUpdateUser = trackerUpdateUser;
+function trackerInitialUpdateAdmin(tracker, hash) {
+    tracker.admin_locations.set(hash, [0, 0]);
+}
+exports.trackerInitialUpdateAdmin = trackerInitialUpdateAdmin;
 function trackerUpdateAdmin(tracker, hash, location) {
+    if (tracker.admin_locations.get(hash)) {
+        throw "Admin not authenticated";
+    }
     tracker.admin_locations.set(hash, location);
 }
 exports.trackerUpdateAdmin = trackerUpdateAdmin;
-const FT_TO_LAT_CONV = 0.00000273965;
 const AVG_BUS_DENSITY_AREA = 0.000054793;
 function trackerCalculateDensity(tracker, admin) {
     let bus_loc = tracker.admin_locations.get(admin);
