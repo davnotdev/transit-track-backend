@@ -107,18 +107,9 @@ app.post("/api/update_location", (req, res) => {
   res.send("ok");
 });
 
-app.post("/api/get_density", (req, res) => {
-  const { userToken } = req.body;
-  let closestAdmin = trackerGetClosestAdmin(tracker, userToken);
-  if (!closestAdmin) {
-    res.status(500).send("{'no':'admins avaliable'}");
-    return;
-  }
-  let density = trackerCalculateDensity(tracker, closestAdmin);
-  res.send({
-    density,
-  });
-});
+app.post("/api/signup", (req, res) =>{
+  userDb.createUsers("yalambersubba13@gmail.com", "Yalamber Subba", "wristking", "bus", "AC transit", "51A", "Fruitvale Bart");
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
