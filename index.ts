@@ -86,6 +86,17 @@ app.post("/api/update_location", (req, res) => {
   res.send("ok");
 });
 
+app.post("/api/calculate_density", (req, res) => {
+  const { userToken } = req.body;
+  let closestAdmin = trackerGetClosestAdmin(tracker, userToken);
+  if (!closestAdmin) {
+    res.status(500).send({ no: "admins avaliable" });
+    return;
+  }
+  let density = trackerCalculateDensity(tracker, closestAdmin);
+  res.send({ density });
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
