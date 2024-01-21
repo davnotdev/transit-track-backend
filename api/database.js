@@ -8,6 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Database = void 0;
 // import { PrismaClient } from "@prisma/client";
 const { PrismaClient } = require('@prisma/client');
 require("dotenv").config();
@@ -78,4 +80,4 @@ class Database {
         });
     }
 }
-module.exports = { Database };
+exports.Database = Database;
