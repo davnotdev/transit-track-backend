@@ -57,6 +57,7 @@ app.post("/api/login", (req, res) => __awaiter(void 0, void 0, void 0, function*
             console.log("user exists");
             if (userExists.password == password) {
                 let token = (0, adminToken_1.adminTokenLogin)(adminTokenMan, email, transit);
+                console.log(transit, adminTokenMan);
                 (0, tracker_1.trackerInitialUpdateAdmin)(tracker, token);
                 res.status(200).send({
                     token,
