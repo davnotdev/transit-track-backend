@@ -143,22 +143,18 @@ app.get("/api/get_transits", (_: any, res: any) => {
 
 app.post("/api/get_admin_location_with_transit", (req: any, res: any) => {
   let { transit } = req.body;
-  let adminToken = null;
+  let adminTokens = [];
 
   for (let adminKey of adminTokenMan.tokens.keys()) {
     let adminData = adminTokenMan.tokens.get(adminKey)!;
     if (deepEqual(adminData.transit, transit)) {
-      adminToken = adminData.token;
-      break;
+      adminTokens.push(adminData.token);
     }
   }
 
-  if (adminToken) {
-    let location = tracker.admin_locations.get(adminToken)!;
-    res.send({ ok: true, location });
-  } else {
-    res.send({ ok: false });
-  }
+  res.send({
+    locations: adminTokens.map((it) => tracker.admin_locations.get(it)!),
+  });
 });
 
 app.listen(port, () => {
