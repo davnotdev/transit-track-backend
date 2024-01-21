@@ -1,22 +1,33 @@
-type LatLong = [number, number];
+export type LatLong = [number, number];
 
-interface Tracker {
+export interface Tracker {
   user_locations: Map<string, LatLong>;
   admin_locations: Map<string, LatLong>;
 }
 
-function trackerUpdateUser(tracker: Tracker, hash: string, location: LatLong) {
+export function createTracker(): Tracker {
+  return {
+    user_locations: new Map(),
+    admin_locations: new Map(),
+  };
+}
+
+export function trackerUpdateUser(tracker: Tracker, hash: string, location: LatLong) {
+  if (tracker.admin_locations.get(hash)) {
+    throw "Admin not authenticated";
+  }
+
   tracker.user_locations.set(hash, location);
 }
 
-function trackerUpdateAdmin(tracker: Tracker, hash: string, location: LatLong) {
+export function trackerUpdateAdmin(tracker: Tracker, hash: string, location: LatLong) {
   tracker.admin_locations.set(hash, location);
 }
 
 const FT_TO_LAT_CONV: number = 0.00000273965;
 const AVG_BUS_DENSITY_AREA: number = 0.000054793;
 
-function trackerCalculateDensity(tracker: Tracker, admin: string) {
+export function trackerCalculateDensity(tracker: Tracker, admin: string) {
   let bus_loc = tracker.admin_locations.get(admin)!;
   let accum_value = 0;
   tracker.user_locations.forEach((user) => {
@@ -25,6 +36,20 @@ function trackerCalculateDensity(tracker: Tracker, admin: string) {
     }
   });
   return accum_value / 20;
+}
+
+export function trackerGetClosestAdmin(tracker: Tracker, user: string): string | null {
+  let min_dist = 999;
+  let selected = null;
+  let user_loc = tracker.user_locations.get(user)!;
+  for (let admin in tracker.admin_locations.keys()) {
+    let dist = vecLength(vecSub(user_loc, tracker.admin_locations.get(admin)!));
+    if (dist < min_dist) {
+      min_dist = dist;
+      selected = admin;
+    }
+  }
+  return selected;
 }
 
 function vecSub(a: LatLong, b: LatLong): LatLong {

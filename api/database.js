@@ -36,7 +36,6 @@ class Database {
                     // password: password,
                 },
             });
-            console.log(user);
             return user;
         });
     }

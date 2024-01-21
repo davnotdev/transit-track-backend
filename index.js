@@ -1,12 +1,21 @@
 // import express from "express";
-const express = require('express')
+const express = require("express");
 // import { Database } from "./api/database";
-const {Database} = require('./api/database')
+const { Database } = require("./api/database");
 // import { Pool } from "pg";
-const {Pool} = require('pg')
+const { Pool } = require("pg");
+const {
+  Tracker,
+  createTracker,
+  trackerUpdateUser,
+  trackerUpdateAdmin,
+  trackerCalculateDensity,
+  trackerGetClosestAdmin,
+} = require("./tracker");
 
 const app = express();
 const userDb = new Database();
+const tracker = createTracker();
 
 app.use(express.json());
 
@@ -29,14 +38,15 @@ const port = process.env.PORT || 8080;
 
 app.get("/", (req, res) => {
   getPostgresVersion();
+  res.send("Hello World");
 });
 
 // app.post("/api/login", async (req, res) => {
 //     const { email, password } = req.body;
-    
+
 //     try {
 //       const user = await userDb.checkUser(email, password);
-      
+
 //       if (user) {
 //         // Assuming checkUser returns a user object on successful login
 //         // Send back a success status code and possibly a token or user details
@@ -51,43 +61,58 @@ app.get("/", (req, res) => {
 //       res.status(500).send("An error occurred during login");
 //     }
 //   });
-  
+
 app.post("/api/login", async (req, res) => {
-    const { email } = req.body;
-    try {
-      const userExists = await userDb.checkUser(email);
-      if (userExists) {
-        // Here you would normally proceed to check the password, etc.
-        res.status(200).send("User exists.");
-      } else {
-        res.status(404).send("User not found.");
-      }
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("An error occurred during login.");
+  const { email } = req.body;
+  try {
+    const userExists = await userDb.checkUser(email);
+    if (userExists) {
+      // Here you would normally proceed to check the password, etc.
+      res.status(200).send("User exists.");
+    } else {
+      res.status(404).send("User not found.");
     }
-  });
-  
-  
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred during login.");
+  }
+});
 
 app.post("/api/signup", (req, res) => {
-    const { email, name, password, vehicleType, transitCompany } = req.body;
-    // Make sure to handle the async operation properly
-    userDb.createUsers(
-      email,
-      name, 
-      password,
-      vehicleType,
-      transitCompany,
-      "",
-      "" 
-    ).then(() => {
+  const { email, name, password, vehicleType, transitCompany } = req.body;
+  // Make sure to handle the async operation properly
+  userDb
+    .createUsers(email, name, password, vehicleType, transitCompany, "", "")
+    .then(() => {
       res.status(201).send("User created");
-    }).catch((error) => {
+    })
+    .catch((error) => {
       res.status(500).send("Error creating user");
     });
+});
+
+app.post("/api/update_location", (req, res) => {
+  const { isAdmin, token, location } = req.body;
+  if (isAdmin) {
+    trackerUpdateAdmin(tracker, token, location);
+  } else {
+    trackerUpdateUser(tracker, token, location);
+  }
+  res.send("ok");
+});
+
+app.post("/api/get_density", (req, res) => {
+  const { userToken } = req.body;
+  let closestAdmin = trackerGetClosestAdmin(tracker, userToken);
+  if (!closestAdmin) {
+    res.status(500).send("{'no':'admins avaliable'}");
+    return;
+  }
+  let density = trackerCalculateDensity(tracker, closestAdmin);
+  res.send({
+    density,
   });
-  
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
