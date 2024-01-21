@@ -19,7 +19,6 @@ class Database {
       data: {
         email: email,
         name: name,
-        // @ts-ignore
         password: password,
         vehicleType: vehicleType || "",
         transitCompany: transitCompany || "",
@@ -29,19 +28,15 @@ class Database {
     });
   }
 
-  async checkUser(email: string, password: string) {
+  async checkUser(email: string) {
     const user = await prisma.admin.findUnique({
       where: {
         email: email,
-        // @ts-ignore
-        password: password,
+        // password: password,
       },
     });
-    if (user) {
-      console.log("True");
-    } else {
-      console.log("False");
-    }
+    console.log(user)
+    return user
   }
 
   async readAllUsers() {

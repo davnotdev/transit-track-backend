@@ -8,13 +8,7 @@ const {Pool} = require('pg')
 const app = express();
 const userDb = new Database();
 
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
-  res.setHeader('Access-Control-Allow-Origin', 'https://ecommerce-ewipdamn7-gutsyguy.vercel.app');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-});
+app.use(express.json());
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -37,23 +31,67 @@ app.get("/", (req, res) => {
   getPostgresVersion();
 });
 
-app.get("/login", (req, res) => {
-  userDb.checkUser("yalambersubba13@gmail.com", "wristking");
-});
+// app.post("/api/login", async (req, res) => {
+//     const { email, password } = req.body;
+    
+//     try {
+//       const user = await userDb.checkUser(email, password);
+      
+//       if (user) {
+//         // Assuming checkUser returns a user object on successful login
+//         // Send back a success status code and possibly a token or user details
+//         res.status(200).send("Login successful");
+//       } else {
+//         // If credentials are wrong, typically a 401 Unauthorized status is sent
+//         res.status(401).send("Invalid credentials");
+//       }
+//     } catch (error) {
+//       // For other errors, a 500 Internal Server Error status is used
+//       console.error(error);
+//       res.status(500).send("An error occurred during login");
+//     }
+//   });
+  
+app.post("/api/login", async (req, res) => {
+    const { email } = req.body;
+  
+    try {
+      const userExists = await userDb.checkUser(email);
+  
+      if (userExists) {
+        // Here you would normally proceed to check the password, etc.
+        res.status(200).send("User exists.");
+      } else {
+        res.status(404).send("User not found.");
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("An error occurred during login.");
+    }
+  });
+  
+  
 
-app.get("/signup", (req, res) => {
-  console.log(req.body)
-  const {email, name, password, vehicleType, transitCompany} = req.body
-  userDb.createUsers(
-    email,
-    name, 
-    password,
-    vehicleType,
-    transitCompany,
-    "",
-    "" 
-  );
-});
+app.post("/api/signup", (req, res) => {
+    console.log(req.body);
+    const { email, name, password, vehicleType, transitCompany } = req.body;
+    
+    // Make sure to handle the async operation properly
+    userDb.createUsers(
+      email,
+      name, 
+      password,
+      vehicleType,
+      transitCompany,
+      "",
+      "" 
+    ).then(() => {
+      res.status(201).send("User created");
+    }).catch((error) => {
+      res.status(500).send("Error creating user");
+    });
+  });
+  
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
