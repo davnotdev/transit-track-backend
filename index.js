@@ -5,17 +5,19 @@ const { Database } = require("./api/database");
 // import { Pool } from "pg";
 const { Pool } = require("pg");
 const {
-  Tracker,
   createTracker,
   trackerUpdateUser,
   trackerUpdateAdmin,
   trackerCalculateDensity,
   trackerGetClosestAdmin,
+  trackerInitialUpdateAdmin,
 } = require("./tracker");
+const { createAdminTokenMan, adminTokenLogin } = require("./adminToken");
 
 const app = express();
 const userDb = new Database();
 const tracker = createTracker();
+const adminTokenMan = createAdminTokenMan();
 
 app.use(express.json());
 
@@ -68,7 +70,11 @@ app.post("/api/login", async (req, res) => {
     const userExists = await userDb.checkUser(email);
     if (userExists) {
       // Here you would normally proceed to check the password, etc.
-      res.status(200).send("User exists.");
+      let token = adminTokenLogin(adminTokenMan, email);
+      trackerInitialUpdateAdmin(token);
+      res.status(200).send({
+        token,
+      });
     } else {
       res.status(404).send("User not found.");
     }

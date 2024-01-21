@@ -5,7 +5,7 @@ require("dotenv").config();
 
 const prisma = new PrismaClient();
 
-class Database {
+export class Database {
   async createUsers(
     email: string,
     name: string,
@@ -74,5 +74,4 @@ class Database {
   }
 }
 
-module.exports = { Database };
 
