@@ -18,7 +18,6 @@ var transit: TransitData;
 
 (async () => {
   transit = await fetchTransitData();
-  console.log(transit);
 })();
 
 const app = express();
@@ -54,6 +53,7 @@ app.post("/api/login", async (req: any, res: any) => {
   const { email, password, transit } = req.body;
   try {
     const userExists = await userDb.checkUser(email);
+    console.log(userExists);
     if (userExists) {
       console.log("user exists");
       if (userExists.password == password) {
