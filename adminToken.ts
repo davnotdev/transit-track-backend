@@ -7,7 +7,7 @@ interface AdminData {
 }
 
 export interface AdminTokenMan {
-  //  email -> token
+  //  email -> data
   tokens: Map<string, AdminData>;
 }
 

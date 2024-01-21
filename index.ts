@@ -113,17 +113,13 @@ app.get("/api/get_transit_data", (_: any, res: any) => {
 
 app.get("/api/get_transits", (_: any, res: any) => {
   let adminDatas = [];
-  console.log(adminTokenMan.tokens.keys());
-  for (let adminKey in adminTokenMan.tokens.keys()) {
-    console.log(adminKey);
+  for (let adminKey of adminTokenMan.tokens.keys()) {
     let adminData = adminTokenMan.tokens.get(adminKey)!;
-    console.log(adminData);
     adminDatas.push({
       location: tracker.admin_locations.get(adminData.token)!,
       transit: adminData.transit,
     });
   }
-  console.log(adminDatas);
   res.send({
     transits: adminDatas,
   });
