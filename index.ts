@@ -17,6 +17,7 @@ import { TransitData, fetchTransitData } from "./transit";
 var transit: TransitData;
 
 async () => {
+  console.log(transit);
   transit = await fetchTransitData();
 };
 
