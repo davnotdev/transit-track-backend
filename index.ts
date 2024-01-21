@@ -1,19 +1,17 @@
-const express = require("express");
+import express from "express";
 // import { Database } from "./api/database";
-const { Database } = require("./api/database");
+import { Database } from "./api/database";
 // import { Pool } from "pg";
-const { Pool } = require("pg");
-const {
+import { Pool } from "pg";
+import {
   createTracker,
   trackerUpdateUser,
   trackerUpdateAdmin,
   trackerCalculateDensity,
   trackerGetClosestAdmin,
   trackerInitialUpdateAdmin,
-} = require("./tracker");
-const { createAdminTokenMan, adminTokenLogin } = require("./adminToken");
-
-
+} from "./tracker";
+import { createAdminTokenMan, adminTokenLogin } from "./adminToken";
 
 const app = express();
 const userDb = new Database();
@@ -39,24 +37,24 @@ const getPostgresVersion = async () => {
 
 const port = process.env.PORT || 8080;
 
-app.get("/", (req:Request, res:any) => {
+app.get("/", (req: Request, res: any) => {
   getPostgresVersion();
   res.send("Hello World");
 });
 
-app.post("/api/login", async (req:any, res:any) => {
-  const {email, password} = req.body;
+app.post("/api/login", async (req: any, res: any) => {
+  const { email, password } = req.body;
   try {
     const userExists = await userDb.checkUser(email);
     if (userExists) {
-      console.log("user exists")
-      if (userExists.password == password){
+      console.log("user exists");
+      if (userExists.password == password) {
         let token = adminTokenLogin(adminTokenMan, email);
         trackerInitialUpdateAdmin(tracker, token);
         res.status(200).send({
-        token,
+          token,
         });
-      } 
+      }
     } else {
       res.status(404).send("User not found.");
     }
@@ -66,7 +64,7 @@ app.post("/api/login", async (req:any, res:any) => {
   }
 });
 
-app.post("/api/signup", (req:any, res:any) => {
+app.post("/api/signup", (req: any, res: any) => {
   const { email, name, password, vehicleType, transitCompany } = req.body;
   // Make sure to handle the async operation properly
   userDb
@@ -74,12 +72,12 @@ app.post("/api/signup", (req:any, res:any) => {
     .then(() => {
       res.status(201).send("User created");
     })
-    .catch((error:any) => {
+    .catch((error: any) => {
       res.status(500).send("Error creating user");
     });
 });
 
-app.post("/api/update_location", (req:any, res:any) => {
+app.post("/api/update_location", (req: any, res: any) => {
   const { isAdmin, token, location } = req.body;
   if (isAdmin) {
     trackerUpdateAdmin(tracker, token, location);
@@ -89,7 +87,7 @@ app.post("/api/update_location", (req:any, res:any) => {
   res.send("ok");
 });
 
-app.post("/api/calculate_density", (req:any, res:any) => {
+app.post("/api/calculate_density", (req: any, res: any) => {
   const { userToken } = req.body;
   let closestAdmin = trackerGetClosestAdmin(tracker, userToken);
   if (!closestAdmin) {
