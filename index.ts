@@ -156,6 +156,8 @@ app.post("/api/get_admin_location_with_transit", (req: any, res: any) => {
 
   console.log(
     "locs",
+    adminTokens,
+    tracker.admin_locations,
     adminTokens.map((it) => tracker.admin_locations.get(it)!),
   );
   res.send({
