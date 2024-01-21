@@ -16,10 +16,10 @@ import { TransitData, fetchTransitData } from "./transit";
 
 var transit: TransitData;
 
-async () => {
-  console.log(transit);
+(async () => {
   transit = await fetchTransitData();
-};
+  console.log(transit);
+})();
 
 const app = express();
 const userDb = new Database();

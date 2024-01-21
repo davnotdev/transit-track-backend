@@ -21,9 +21,10 @@ const tracker_1 = require("./tracker");
 const adminToken_1 = require("./adminToken");
 const transit_1 = require("./transit");
 var transit;
-() => __awaiter(void 0, void 0, void 0, function* () {
+(() => __awaiter(void 0, void 0, void 0, function* () {
     transit = yield (0, transit_1.fetchTransitData)();
-});
+    console.log(transit);
+}))();
 const app = (0, express_1.default)();
 const userDb = new database_1.Database();
 const tracker = (0, tracker_1.createTracker)();
