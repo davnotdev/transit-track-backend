@@ -63,17 +63,11 @@ async function fetchTransitData(): Promise<TransitData> {
     const buf = Buffer.from(it);
     let zip = new AdmZip(buf);
 
-    console.log(zip.getEntries());
-    if (zip.getEntryCount() == 1) {
-      console.log(zip.getEntry(zip.getEntries()[0].name));
-    }
-
     let raw_stops = zip.getEntry("");
     let raw_routes = zip.getEntry("");
     let raw_trips = zip.getEntry("");
     let raw_stop_times = zip.getEntry("");
     zip.forEach((file) => {
-      console.log(file.name);
       switch (file.name) {
         case "stops.txt":
           raw_stops = file;
@@ -94,8 +88,6 @@ async function fetchTransitData(): Promise<TransitData> {
     let routes_data = raw_routes?.getData().toString();
     let trips_data = raw_trips?.getData().toString();
     let stop_times_data = raw_stop_times?.getData().toString();
-    console.log("s1");
-    console.log(stops_data);
 
     let gtfs_stops = parse(stops_data!, {
       columns: true,
@@ -119,8 +111,6 @@ async function fetchTransitData(): Promise<TransitData> {
       ignore_last_delimiters: true,
     });
 
-    console.log("s2");
-
     //  Enumerate all stops / routes
 
     gtfs_stops.forEach((it: any) => {
@@ -129,12 +119,10 @@ async function fetchTransitData(): Promise<TransitData> {
         name: it.stop_name,
         code: it.stop_code,
         lat: it.stop_lat,
-        //  Includes "stop_lon" because Santa Cruz people can't fucking spell.
+        //  Includes "stop_lon" because San Francisco people can't fucking spell.
         long: it.stop_long || it.stop_lon,
       });
     });
-
-    console.log("s3");
 
     gtfs_routes.forEach((it: any) => {
       let route_id = it.route_id;
@@ -164,13 +152,3 @@ async function fetchTransitData(): Promise<TransitData> {
     units: final_units,
   };
 }
-(async () => {
-  let data = await fetchTransitData();
-  console.log(data);
-  // console.log("got data");
-  // data.units
-  //   .find((it) => it.id == "44")
-  //   ?.stop_ids.forEach((stop_id) => {
-  //     console.log("44", data.stops.find((it) => stop_id == it.stop_id)?.name);
-  //   });
-})();
