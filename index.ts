@@ -88,6 +88,7 @@ app.post("/api/signup", (req: any, res: any) => {
 app.post("/api/update_location", (req: any, res: any) => {
   const { isAdmin, token, location } = req.body;
   if (isAdmin) {
+    console.log("locc", location);
     trackerUpdateAdmin(tracker, token, location);
   } else {
     trackerUpdateUser(tracker, token, location);
@@ -147,11 +148,16 @@ app.post("/api/get_admin_location_with_transit", (req: any, res: any) => {
 
   for (let adminKey of adminTokenMan.tokens.keys()) {
     let adminData = adminTokenMan.tokens.get(adminKey)!;
+    console.log("cmp", adminData.transit, transit);
     if (deepEqual(adminData.transit, transit)) {
       adminTokens.push(adminData.token);
     }
   }
 
+  console.log(
+    "locs",
+    adminTokens.map((it) => tracker.admin_locations.get(it)!),
+  );
   res.send({
     locations: adminTokens.map((it) => tracker.admin_locations.get(it)!),
   });
