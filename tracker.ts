@@ -21,10 +21,6 @@ export function trackerInitialUpdateAdmin(tracker: Tracker, hash: string) {
 }
 
 export function trackerUpdateAdmin(tracker: Tracker, hash: string, location: LatLong) {
-  if (tracker.admin_locations.get(hash)) {
-    throw "Admin not authenticated";
-  }
-
   tracker.admin_locations.set(hash, location);
 }
 
